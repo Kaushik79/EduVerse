@@ -2,7 +2,6 @@
 node_modules/
 .pnp/
 .pnp.js
-
 # Build outputs
 dist/
 build/
@@ -10,7 +9,6 @@ out/
 .next/
 .nuxt/
 .vite/
-
 # Environment variables
 .env
 .env.local
