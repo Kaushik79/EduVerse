@@ -27,7 +27,7 @@ async function seed() {
       leetcodeUsername: 'alexmorgan_dev', linkedinUrl: 'https://linkedin.com/in/alexmorgan',
       githubUsername: 'alexmorgan', bio: 'Full-stack developer | Open source enthusiast',
       skills: 'React,Node.js,Python,Machine Learning', semester: 5, section: 'A', batch: '2022-2026',
-      phone: '9876543210', parentPhone: '9876543211', isVerified: true
+      phone: '+916360299107', parentPhone: '9876543211', isVerified: true
     });
 
     const student2 = await User.create({
@@ -36,7 +36,7 @@ async function seed() {
       leetcodeUsername: 'mchen_lc', linkedinUrl: 'https://linkedin.com/in/michaelchen',
       githubUsername: 'mchendev', bio: 'Competitive programmer | AI researcher',
       skills: 'C++,Python,TensorFlow,Algorithms', semester: 5, section: 'A', batch: '2022-2026',
-      phone: '9876543212', parentPhone: '9876543213', isVerified: true
+      phone: '+918217856602', parentPhone: '8217856601', isVerified: true
     });
 
     const student3 = await User.create({
@@ -45,7 +45,7 @@ async function seed() {
       leetcodeUsername: null, linkedinUrl: 'https://linkedin.com/in/sarahmiller',
       githubUsername: 'sarahm', bio: 'Physics enthusiast | Data science learner',
       skills: 'Python,MATLAB,Data Analysis', semester: 3, section: 'B', batch: '2023-2027',
-      phone: '9876543214', parentPhone: '9876543215', isVerified: true
+      phone: '+919940404547', parentPhone: '9876543215', isVerified: true
     });
 
     const student4 = await User.create({
@@ -54,7 +54,7 @@ async function seed() {
       leetcodeUsername: 'dkim99', linkedinUrl: null,
       githubUsername: 'davidkim', bio: 'Hardware hacker | IoT projects',
       skills: 'Arduino,Raspberry Pi,C,Embedded Systems', semester: 5, section: 'A', batch: '2022-2026',
-      phone: '9876543216', parentPhone: '9876543217', isVerified: true
+      phone: '+918778476020', parentPhone: '9876543217', isVerified: true
     });
 
     const student5 = await User.create({
@@ -63,7 +63,7 @@ async function seed() {
       leetcodeUsername: 'emma_lc', linkedinUrl: 'https://linkedin.com/in/emmawatson',
       githubUsername: 'emmaw', bio: 'UI/UX Designer | Frontend Dev',
       skills: 'Figma,React,CSS,JavaScript', semester: 3, section: 'B', batch: '2023-2027',
-      phone: '9876543218', parentPhone: '9876543219', isVerified: true
+      phone: '+917200585726', parentPhone: '9876543219', isVerified: true
     });
 
     const alumni = await User.create({

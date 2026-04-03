@@ -26,6 +26,15 @@ import TeacherStudents from './pages/teacher/Students';
 import TeacherSchedule from './pages/teacher/Schedule';
 import TeacherSettings from './pages/teacher/Settings';
 
+// Alumni Pages
+import AlumniProfile from './pages/alumni/Profile';
+import AlumniDirectory from './pages/alumni/AlumniDirectory';
+import AlumniJobs from './pages/alumni/Jobs';
+import AlumniMessaging from './pages/alumni/Messaging';
+import AlumniEvents from './pages/alumni/Events';
+import AlumniMentorship from './pages/alumni/Mentorship';
+import AlumniSettings from './pages/alumni/Settings';
+
 // Admin Pages
 import AdminDashboard from './pages/admin/Dashboard';
 import RoleManagement from './pages/admin/RoleManagement';
@@ -81,6 +90,18 @@ function App() {
             <Route path="verification" element={<VerificationQueue />} />
             <Route path="settings" element={<AdminSettings />} />
             <Route path="support" element={<Support />} />
+          </Route>
+
+          {/* Alumni Routes */}
+          <Route path="/alumni" element={<AppLayout />}>
+            <Route index element={<Navigate to="profile" replace />} />
+            <Route path="profile" element={<AlumniProfile />} />
+            <Route path="directory" element={<AlumniDirectory />} />
+            <Route path="jobs" element={<AlumniJobs />} />
+            <Route path="messaging" element={<AlumniMessaging />} />
+            <Route path="events" element={<AlumniEvents />} />
+            <Route path="mentorship" element={<AlumniMentorship />} />
+            <Route path="settings" element={<AlumniSettings />} />
           </Route>
 
           {/* Catch all */}

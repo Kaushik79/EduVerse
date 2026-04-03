@@ -25,7 +25,11 @@ import {
   Flag,
   Trophy,
   FolderGit2,
-  FileText
+  FileText,
+  Briefcase,
+  MessageSquare,
+  Star,
+  CalendarRange
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 
@@ -77,10 +81,18 @@ const sidebarConfig = {
   },
   alumni: {
     title: 'Alumni Portal',
+    menuLabel: 'NETWORK',
     items: [
-      { label: 'Dashboard', icon: LayoutDashboard, path: '/student/dashboard' },
-      { label: 'Resources', icon: FolderOpen, path: '/student/resources' },
-      { label: 'Settings', icon: Settings, path: '/student/settings' },
+      { label: 'My Profile', icon: User, path: '/alumni/profile' },
+      { label: 'Alumni Directory', icon: Users, path: '/alumni/directory' },
+      { label: 'Jobs & Referrals', icon: Briefcase, path: '/alumni/jobs' },
+      { label: 'Messaging', icon: MessageSquare, path: '/alumni/messaging' },
+      { label: 'Events', icon: CalendarRange, path: '/alumni/events' },
+      { label: 'Mentorship', icon: Star, path: '/alumni/mentorship' },
+    ],
+    otherLabel: 'OTHER',
+    otherItems: [
+      { label: 'Settings', icon: Settings, path: '/alumni/settings' },
     ]
   }
 };
@@ -94,6 +106,7 @@ export function Sidebar() {
     const path = location.pathname;
     if (path.startsWith('/teacher')) return 'teacher';
     if (path.startsWith('/admin')) return 'admin';
+    if (path.startsWith('/alumni')) return 'alumni';
     return 'student';
   };
 
@@ -115,12 +128,12 @@ export function Sidebar() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const basePath = role === 'teacher' ? '/teacher' : role === 'admin' ? '/admin' : '/student';
+  const basePath = role === 'teacher' ? '/teacher' : role === 'admin' ? '/admin' : role === 'alumni' ? '/alumni' : '/student';
 
   const userMenuItems = [
     { label: 'Profile', icon: User, action: () => navigate(`${basePath}/settings`) },
     { label: 'Settings', icon: Settings, action: () => navigate(`${basePath}/settings`) },
-    { label: 'Report', icon: Flag, action: () => {} },
+    { label: 'Report', icon: Flag, action: () => { } },
     { label: 'Logout', icon: LogOut, action: () => { setShowUserMenu(false); logout(); navigate('/login'); } },
   ];
 

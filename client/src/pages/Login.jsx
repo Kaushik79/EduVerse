@@ -24,7 +24,7 @@ export default function Login() {
         student: '/student/dashboard',
         teacher: '/teacher/dashboard',
         admin: '/admin/dashboard',
-        alumni: '/student/dashboard',
+        alumni: '/alumni/profile',
         higherofficial: '/admin/dashboard',
       };
       navigate(dashboardPaths[role] || '/student/dashboard');
@@ -66,7 +66,7 @@ export default function Login() {
               <span className="text-blue-300 italic">Create.</span>
             </h2>
             <p className="mt-6 text-blue-200/80 text-base leading-relaxed">
-              Find teammates for projects & hackathons. Showcase your skills. 
+              Find teammates for projects & hackathons. Showcase your skills.
               Manage academics — all in one place.
             </p>
 
