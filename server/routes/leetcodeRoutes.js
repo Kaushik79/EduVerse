@@ -5,5 +5,6 @@ const auth = require('../middleware/auth');
 router.get('/my', auth, leetcodeController.getMyStats);
 router.get('/user/:userId', auth, leetcodeController.getStatsForUser);
 router.post('/refresh', auth, leetcodeController.refresh);
+router.get('/sync-all', auth, leetcodeController.syncAll);
 
 module.exports = router;

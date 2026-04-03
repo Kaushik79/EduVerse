@@ -36,12 +36,41 @@ export default function TeacherDashboard() {
   const { user } = useAuth();
   const [whatsappEnabled, setWhatsappEnabled] = useState(true);
   const [session, setSession] = useState({ status: 'LOCKED', loading: true });
+  const [leaderboard, setLeaderboard] = useState([]);
+  const [syncing, setSyncing] = useState(false);
+
+  const fetchLeaderboard = () => {
+    api.get('/teacher/leaderboard')
+      .then(res => setLeaderboard(res.data))
+      .catch(console.error);
+  };
 
   useEffect(() => {
     api.get('/session')
       .then(res => setSession({ status: res.data.status, loading: false }))
       .catch(console.error);
+
+    fetchLeaderboard();
   }, []);
+
+  const handleSyncLeetcode = async () => {
+    try {
+      setSyncing(true);
+      await api.get('/leetcode/sync-all');
+      fetchLeaderboard();
+    } catch (error) {
+      console.error('Failed to sync LeetCode mapping', error);
+    } finally {
+      setSyncing(false);
+    }
+  };
+
+  const getMedal = (index) => {
+    if (index === 0) return '🥇';
+    if (index === 1) return '🥈';
+    if (index === 2) return '🥉';
+    return `#${index + 1}`;
+  };
 
   const handleToggleSession = async () => {
     try {
@@ -187,44 +216,68 @@ export default function TeacherDashboard() {
         </div>
       </div>
 
-      {/* Bottom Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-        {/* OD Requests */}
+      {/* Bottom Row - Leaderboard */}
+      <div className="grid grid-cols-1 gap-6 mt-6">
         <Card>
-          <CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="flex items-center gap-2">
-              <span className="text-lg">📋</span>
-              OD Requests
+              <span className="text-lg">🏆</span>
+              Class LeetCode Leaderboard
             </CardTitle>
+            <Button 
+                onClick={handleSyncLeetcode} 
+                disabled={syncing}
+                variant="outline" 
+                className="text-xs h-8 px-3"
+            >
+              {syncing ? 'Syncing...' : 'Sync Live Stats'}
+            </Button>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {mockOdRequests.map((request, index) => (
-                <div key={index} className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <Avatar alt={request.name} fallback={request.name.charAt(0)} />
-                    <div>
-                      <p className="text-sm font-medium text-text">{request.name}</p>
-                      <p className="text-xs text-text-muted">{request.reason}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <button className="w-8 h-8 rounded-full border border-border flex items-center justify-center text-text-muted hover:text-danger hover:border-danger transition-colors cursor-pointer">
-                      <X size={16} />
-                    </button>
-                    <button className="w-8 h-8 rounded-full bg-success flex items-center justify-center text-white hover:bg-success-light transition-colors cursor-pointer">
-                      <Check size={16} />
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <button className="w-full mt-4 py-2 text-sm text-text-secondary border border-border rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
-              View Archived Requests
-            </button>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-16">Rank</TableHead>
+                  <TableHead>Student</TableHead>
+                  <TableHead className="text-center text-emerald-600">Easy</TableHead>
+                  <TableHead className="text-center text-amber-500">Medium</TableHead>
+                  <TableHead className="text-center text-red-500">Hard</TableHead>
+                  <TableHead className="text-right">Total Solved</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {leaderboard.map((student, index) => (
+                  <TableRow key={student.id}>
+                    <TableCell className="font-medium text-lg">{getMedal(index)}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        <Avatar alt={student.name} fallback={student.name?.charAt(0) || '?'} />
+                        <div>
+                          <p className="font-medium text-text">{student.name}</p>
+                          <p className="text-xs text-text-muted">@{student.leetcodeHandle || 'N/A'}</p>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-center font-medium">{student.easySolved}</TableCell>
+                    <TableCell className="text-center font-medium">{student.mediumSolved}</TableCell>
+                    <TableCell className="text-center font-medium">{student.hardSolved}</TableCell>
+                    <TableCell className="text-right font-bold text-accent">{student.totalSolved}</TableCell>
+                  </TableRow>
+                ))}
+                {leaderboard.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={6} className="text-center text-text-muted py-8">
+                      No student data available. Please sync LeetCode stats.
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
           </CardContent>
         </Card>
+      </div>
 
+      <div className="grid grid-cols-1 mt-6">
         {/* Student Activity Feed */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">

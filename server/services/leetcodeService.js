@@ -1,4 +1,5 @@
 const { LeetcodeStats } = require('../models');
+const axios = require('axios');
 
 /**
  * Fetches LeetCode stats for a given username using the public GraphQL API.
@@ -31,19 +32,17 @@ async function fetchLeetcodeStats(username) {
   `;
 
   try {
-    const response = await fetch('https://leetcode.com/graphql', {
-      method: 'POST',
+    const response = await axios.post('https://leetcode.com/graphql', {
+      query,
+      variables: { username }
+    }, {
       headers: {
         'Content-Type': 'application/json',
         'Referer': 'https://leetcode.com',
-      },
-      body: JSON.stringify({
-        query,
-        variables: { username }
-      })
+      }
     });
 
-    const data = await response.json();
+    const data = response.data;
     
     if (!data.data?.matchedUser) {
       return null;

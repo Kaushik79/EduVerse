@@ -1,5 +1,8 @@
-const { getLeetcodeStatsForUser } = require('../services/leetcodeService');
+const { fetchLeetcodeStats, getLeetcodeStatsForUser } = require('../services/leetcodeService');
 const { User, LeetcodeStats } = require('../models');
+const { Op } = require('sequelize');
+
+let globalLastSync = null;
 
 const leetcodeController = {
   // Get stats for current user
@@ -45,6 +48,47 @@ const leetcodeController = {
       res.json(stats);
     } catch (error) {
       res.status(500).json({ message: 'Server error', error: error.message });
+    }
+  },
+
+  async syncAll(req, res) {
+    try {
+      if (globalLastSync && (Date.now() - globalLastSync < 120000)) {
+        return res.status(429).json({ 
+          message: 'Already synced. Please wait 2 minutes between syncs.',
+          cooldownRemaining: Math.ceil((120000 - (Date.now() - globalLastSync)) / 1000)
+        });
+      }
+
+      const users = await User.findAll({
+        where: {
+          leetcodeHandle: {
+            [Op.not]: null
+          }
+        }
+      });
+
+      let updatedCount = 0;
+
+      for (const user of users) {
+        const stats = await fetchLeetcodeStats(user.leetcodeHandle);
+        if (stats) {
+          await user.update({
+            easySolved: stats.easySolved,
+            mediumSolved: stats.mediumSolved,
+            hardSolved: stats.hardSolved,
+            totalSolved: stats.totalSolved,
+            leetcodeRanking: stats.ranking
+          });
+          updatedCount++;
+        }
+      }
+
+      globalLastSync = Date.now();
+      res.json({ message: 'Sync complete', updatedCount, totalUsersWithHandle: users.length });
+    } catch (error) {
+      console.error('Error in syncAll:', error);
+      res.status(500).json({ message: 'Server error during sync', error: error.message });
     }
   }
 };

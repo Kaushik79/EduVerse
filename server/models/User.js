@@ -72,6 +72,31 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     allowNull: true
   },
+  leetcodeHandle: {
+    type: DataTypes.STRING,
+    unique: true,
+    allowNull: true
+  },
+  easySolved: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+  },
+  mediumSolved: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+  },
+  hardSolved: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+  },
+  totalSolved: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+  },
+  leetcodeRanking: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+  },
   linkedinUrl: {
     type: DataTypes.STRING,
     allowNull: true
