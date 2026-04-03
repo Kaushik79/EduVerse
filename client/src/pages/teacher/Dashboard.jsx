@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import api from '../../lib/api';
 import { Topbar } from '../../components/layout/Topbar';
 import { StatCard } from '../../components/shared/StatCard';
 import { ActivityFeed } from '../../components/shared/ActivityFeed';
@@ -34,6 +35,24 @@ const mockActivities = [
 export default function TeacherDashboard() {
   const { user } = useAuth();
   const [whatsappEnabled, setWhatsappEnabled] = useState(true);
+  const [session, setSession] = useState({ status: 'LOCKED', loading: true });
+
+  useEffect(() => {
+    api.get('/session')
+      .then(res => setSession({ status: res.data.status, loading: false }))
+      .catch(console.error);
+  }, []);
+
+  const handleToggleSession = async () => {
+    try {
+      setSession(prev => ({ ...prev, loading: true }));
+      const res = await api.post('/session/toggle');
+      setSession({ status: res.data.status, loading: false });
+    } catch (error) {
+      console.error(error);
+      setSession(prev => ({ ...prev, loading: false }));
+    }
+  };
 
   return (
     <div>
@@ -42,6 +61,13 @@ export default function TeacherDashboard() {
         subtitle={`Welcome back, Professor! You have 4 priority items today.`}
         actions={
           <div className="flex items-center gap-3">
+            <Button 
+                onClick={handleToggleSession}
+                disabled={session.loading}
+                className={`font-bold tracking-wider transition-colors ${session.status === 'ACTIVE' ? 'bg-red-600 hover:bg-red-700 text-white' : 'bg-emerald-600 hover:bg-emerald-700 text-white'}`}
+            >
+              {session.loading ? 'UPDATING...' : session.status === 'ACTIVE' ? 'STOP EXAM' : 'START EXAM'}
+            </Button>
             <Button variant="secondary">
               <Upload size={16} />
               Upload Materials

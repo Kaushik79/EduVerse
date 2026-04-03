@@ -7,9 +7,37 @@ import api from '../lib/api';
 export default function Analyze() {
   const { repoName } = useParams();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [commits, setCommits] = useState([]);
   const [error, setError] = useState(null);
+  const [sessionStatus, setSessionStatus] = useState('LOCKED');
+  const [showTestMode, setShowTestMode] = useState(false);
+
+  useEffect(() => {
+    let interval;
+    
+    const checkSession = async () => {
+      try {
+        const res = await api.get('/session');
+        const status = res.data.status;
+        setSessionStatus(status);
+        
+        if (status === 'ACTIVE') {
+          clearInterval(interval);
+        }
+      } catch (err) {
+        console.error('Failed to get session status', err);
+      }
+    };
+
+    checkSession();
+    
+    interval = setInterval(() => {
+       checkSession();
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const analyzeRepo = async () => {
@@ -26,11 +54,52 @@ export default function Analyze() {
     analyzeRepo();
   }, [repoName]);
 
+  if (showTestMode && sessionStatus === 'LOCKED') {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-50/95 backdrop-blur-sm">
+        <div className="text-center p-8 bg-white rounded-xl shadow-lg max-w-md w-full border border-gray-100">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-emerald-500 mb-6 mx-auto"></div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-3">Locked</h2>
+          <p className="text-gray-600 text-base mb-6">Waiting for Teacher to Start Session...</p>
+          <Button variant="outline" onClick={() => setShowTestMode(false)}>Cancel</Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (showTestMode && sessionStatus === 'ACTIVE') {
+    return (
+      <div className="p-6">
+        <div className="mb-6 flex justify-between items-center">
+          <h1 className="text-2xl font-bold text-gray-900">Test Generation: {repoName}</h1>
+          <Button onClick={() => setShowTestMode(false)} variant="outline">Exit Test Mode</Button>
+        </div>
+        <Card>
+          <CardContent className="py-12 flex flex-col items-center justify-center text-center">
+             <div className="animate-pulse rounded-full h-16 w-16 bg-blue-100 flex items-center justify-center mb-4">
+               <span className="text-2xl">🤖</span>
+             </div>
+             <h2 className="text-xl font-bold mb-2">Gemini Analysis Active</h2>
+             <p className="text-gray-600">The teacher has started the session. AI Test Generation would begin here.</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="p-6">
       <div className="mb-6 flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-900">Analysis: {repoName}</h1>
-        <Button onClick={() => navigate(-1)} variant="outline">Go Back</Button>
+        <div className="flex gap-3">
+          <Button 
+            onClick={() => setShowTestMode(true)} 
+            className="bg-emerald-600 hover:bg-emerald-700 text-white"
+          >
+            Take AI Test
+          </Button>
+          <Button onClick={() => navigate(-1)} variant="outline">Go Back</Button>
+        </div>
       </div>
 
       {loading ? (

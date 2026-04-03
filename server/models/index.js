@@ -17,6 +17,8 @@ const Achievement = require('./Achievement');
 const LeetcodeStats = require('./LeetcodeStats');
 const CalendarEvent = require('./CalendarEvent');
 const LeaveRequest = require('./LeaveRequest');
+const Session = require('./Session');
+const Test = require('./Test');
 
 // ═══ Existing Associations ═══
 
@@ -122,6 +124,10 @@ CalendarEvent.belongsTo(Course, { foreignKey: 'courseId', as: 'course' });
 User.hasMany(LeaveRequest, { foreignKey: 'studentId', as: 'leaveRequests' });
 LeaveRequest.belongsTo(User, { foreignKey: 'studentId', as: 'student' });
 
+// User - Test
+User.hasMany(Test, { foreignKey: 'userId', as: 'tests' });
+Test.belongsTo(User, { foreignKey: 'userId', as: 'user' });
+
 module.exports = {
   sequelize,
   User,
@@ -141,5 +147,7 @@ module.exports = {
   Achievement,
   LeetcodeStats,
   CalendarEvent,
-  LeaveRequest
+  LeaveRequest,
+  Session,
+  Test
 };

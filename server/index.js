@@ -23,6 +23,7 @@ const leetcodeRoutes = require('./routes/leetcodeRoutes');
 const calendarRoutes = require('./routes/calendarRoutes');
 const leaveRoutes = require('./routes/leaveRoutes');
 const githubRoutes = require('./routes/githubRoutes');
+const sessionRoutes = require('./routes/sessionRoutes');
 
 const app = express();
 
@@ -51,6 +52,7 @@ app.use('/api/leetcode', leetcodeRoutes);
 app.use('/api/calendar', calendarRoutes);
 app.use('/api/leaves', leaveRoutes);
 app.use('/api/github', githubRoutes);
+app.use('/api/session', sessionRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

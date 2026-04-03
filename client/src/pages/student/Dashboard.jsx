@@ -22,11 +22,11 @@ export default function StudentDashboard() {
   const [repos, setRepos] = useState([]);
 
   useEffect(() => {
-    api.get('/leetcode/my').then(r => setLeetcode(r.data)).catch(() => {});
-    api.get('/achievements/my').then(r => setAchievements(r.data)).catch(() => {});
-    api.get('/projects/my').then(r => setProjects(r.data)).catch(() => {});
-    api.get('/calendar').then(r => setEvents(r.data?.slice(0, 4) || [])).catch(() => {});
-    api.get('/github/repos').then(r => setRepos(r.data)).catch(() => {});
+    api.get('/leetcode/my').then(r => setLeetcode(r.data)).catch(() => { });
+    api.get('/achievements/my').then(r => setAchievements(r.data)).catch(() => { });
+    api.get('/projects/my').then(r => setProjects(r.data)).catch(() => { });
+    api.get('/calendar').then(r => setEvents(r.data?.slice(0, 4) || [])).catch(() => { });
+    api.get('/github/repos').then(r => setRepos(r.data)).catch(() => { });
   }, []);
 
   // Mock data for demo when API not available
@@ -157,6 +157,59 @@ export default function StudentDashboard() {
         </Card>
       </div>
 
+      {/* GitHub Repositories Row */}
+      <div className="grid grid-cols-1 gap-6 mt-6 pb-6">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle className="flex items-center gap-2">
+              <FolderGit2 size={20} className="text-gray-800" />
+              Repository Selection
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {repos.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                {repos.map(repo => (
+                  <div key={repo.name} className="p-4 bg-gray-50 rounded-lg border border-gray-200 flex flex-col h-full hover:shadow-sm transition-shadow">
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-lg text-text mb-1 truncate" title={repo.name}>{repo.name}</h3>
+                      <p className="text-sm text-text-muted mb-3 line-clamp-2">
+                        {repo.description || 'No description available'}
+                      </p>
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {repo.language && (
+                          <span className="px-2 py-0.5 text-xs bg-gray-200 text-gray-700 rounded-md">
+                            {repo.language}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="pt-3 flex justify-between items-center border-t border-gray-200 gap-2">
+                      <a href={repo.html_url} target="_blank" rel="noreferrer" className="text-xs font-medium text-accent hover:text-accent-light">
+                        View Source →
+                      </a>
+                      <Button
+                        onClick={() => navigate(`/analyze/${repo.name}`)}
+                        variant="primary"
+                        className="text-xs h-8 px-3 py-1"
+                      >
+                        Analyze Project
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-10">
+                <p className="text-text-muted mb-4">No repositories found or not connected to GitHub.</p>
+                <Button onClick={() => window.location.href = 'http://localhost:5000/api/auth/github'}>
+                  Connect to GitHub
+                </Button>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
       {/* Bottom Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
         {/* Recent Achievements */}
@@ -229,59 +282,6 @@ export default function StudentDashboard() {
         </Card>
       </div>
 
-      {/* GitHub Repositories Row */}
-      <div className="grid grid-cols-1 gap-6 mt-6 pb-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="flex items-center gap-2">
-              <FolderGit2 size={20} className="text-gray-800" />
-              Repository Selection
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {repos.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                {repos.map(repo => (
-                  <div key={repo.name} className="p-4 bg-gray-50 rounded-lg border border-gray-200 flex flex-col h-full hover:shadow-sm transition-shadow">
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-lg text-text mb-1 truncate" title={repo.name}>{repo.name}</h3>
-                      <p className="text-sm text-text-muted mb-3 line-clamp-2">
-                        {repo.description || 'No description available'}
-                      </p>
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        {repo.language && (
-                          <span className="px-2 py-0.5 text-xs bg-gray-200 text-gray-700 rounded-md">
-                            {repo.language}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                    <div className="pt-3 flex justify-between items-center border-t border-gray-200 gap-2">
-                      <a href={repo.html_url} target="_blank" rel="noreferrer" className="text-xs font-medium text-accent hover:text-accent-light">
-                        View Source →
-                      </a>
-                      <Button
-                        onClick={() => navigate(`/analyze/${repo.name}`)}
-                        variant="primary"
-                        className="text-xs h-8 px-3 py-1"
-                      >
-                        Analyze Project
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-10">
-                <p className="text-text-muted mb-4">No repositories found or not connected to GitHub.</p>
-                <Button onClick={() => window.location.href = 'http://localhost:5000/api/auth/github'}>
-                  Connect to GitHub
-                </Button>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
     </div>
   );
 }
