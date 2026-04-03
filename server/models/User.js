@@ -50,6 +50,23 @@ const User = sequelize.define('User', {
     type: DataTypes.BOOLEAN,
     defaultValue: false
   },
+  githubId: {
+    type: DataTypes.STRING,
+    unique: true,
+    allowNull: true
+  },
+  username: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  avatarUrl: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  accessToken: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
   // Profile links
   leetcodeUsername: {
     type: DataTypes.STRING,

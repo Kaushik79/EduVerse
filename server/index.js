@@ -22,6 +22,7 @@ const achievementRoutes = require('./routes/achievementRoutes');
 const leetcodeRoutes = require('./routes/leetcodeRoutes');
 const calendarRoutes = require('./routes/calendarRoutes');
 const leaveRoutes = require('./routes/leaveRoutes');
+const githubRoutes = require('./routes/githubRoutes');
 
 const app = express();
 
@@ -49,6 +50,7 @@ app.use('/api/achievements', achievementRoutes);
 app.use('/api/leetcode', leetcodeRoutes);
 app.use('/api/calendar', calendarRoutes);
 app.use('/api/leaves', leaveRoutes);
+app.use('/api/github', githubRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

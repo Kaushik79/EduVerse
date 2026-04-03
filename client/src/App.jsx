@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { AppLayout } from './components/layout/AppLayout';
 import Login from './pages/Login';
+import Analyze from './pages/Analyze';
 
 // Student Pages
 import StudentDashboard from './pages/student/Dashboard';
@@ -81,6 +82,11 @@ function App() {
             <Route path="verification" element={<VerificationQueue />} />
             <Route path="settings" element={<AdminSettings />} />
             <Route path="support" element={<Support />} />
+          </Route>
+
+          {/* Shared Authenticated Routes */}
+          <Route element={<AppLayout />}>
+            <Route path="/analyze/:repoName" element={<Analyze />} />
           </Route>
 
           {/* Catch all */}
