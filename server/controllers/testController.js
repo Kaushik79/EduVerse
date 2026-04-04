@@ -95,11 +95,11 @@ const testController = {
         return false;
       };
 
-      generateSuccess = await attemptGeneration("gemini-2.0-flash", 3);
+      generateSuccess = await attemptGeneration("gemini-2.5-flash-lite", 3);
       
       if (!generateSuccess) {
-        console.log("Fallback: trying gemini-2.0-flash-lite...");
-        generateSuccess = await attemptGeneration("gemini-2.0-flash-lite", 1);
+        console.log("Fallback: trying gemini-2.5-flash...");
+        generateSuccess = await attemptGeneration("gemini-2.5-flash", 1);
       }
 
       if (!generateSuccess) {
