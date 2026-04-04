@@ -53,17 +53,10 @@ const leetcodeController = {
 
   async syncAll(req, res) {
     try {
-      if (globalLastSync && (Date.now() - globalLastSync < 120000)) {
-        return res.status(429).json({ 
-          message: 'Already synced. Please wait 2 minutes between syncs.',
-          cooldownRemaining: Math.ceil((120000 - (Date.now() - globalLastSync)) / 1000)
-        });
-      }
-
       const users = await User.findAll({
         where: {
           leetcodeHandle: {
-            [Op.not]: null
+            [Op.ne]: null
           }
         }
       });

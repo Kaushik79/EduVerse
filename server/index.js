@@ -25,6 +25,7 @@ const leaveRoutes = require('./routes/leaveRoutes');
 const githubRoutes = require('./routes/githubRoutes');
 const sessionRoutes = require('./routes/sessionRoutes');
 const teacherRoutes = require('./routes/teacherRoutes');
+const testRoutes = require('./routes/testRoutes');
 
 const app = express();
 
@@ -55,6 +56,7 @@ app.use('/api/leaves', leaveRoutes);
 app.use('/api/github', githubRoutes);
 app.use('/api/session', sessionRoutes);
 app.use('/api/teacher', teacherRoutes);
+app.use('/api/test', testRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
